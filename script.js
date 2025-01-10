@@ -13,15 +13,18 @@ document.querySelectorAll('.character').forEach(character => {
     character.addEventListener('click', () => {
         if (isGameOver) return; // Jika Game Over, hentikan semua aksi
 
-        if (charactersOnBoat.length < 2 && !charactersOnBoat.includes(character)) {
+        const currentShore = isBoatOnLeft ? leftShore : rightShore;
+
+        if (charactersOnBoat.length < 2 && !charactersOnBoat.includes(character) && character.parentElement === currentShore) {
             boat.appendChild(character); // Tambahkan karakter ke kapal
             charactersOnBoat.push(character); // Lacak karakter di kapal
-            statusText.textContent = "karakter ditambahkan ke kapal. Ready to move!";
+            statusText.textContent = "Karakter ditambahkan ke kapal. Ready to move!";
         } else if (charactersOnBoat.includes(character)) {
-            const currentShore = isBoatOnLeft ? leftShore : rightShore;
             currentShore.appendChild(character); // Hapus karakter dari kapal
             charactersOnBoat = charactersOnBoat.filter(c => c !== character); // Perbarui pelacakan
-            statusText.textContent = "karakter di hapus dari kapal.";
+            statusText.textContent = "Karakter dihapus dari kapal.";
+        } else {
+            statusText.textContent = "Karakter hanya dapat diambil dari sisi tempat kapal berada.";
         }
     });
 });
@@ -31,7 +34,7 @@ moveBoatButton.addEventListener('click', () => {
     if (isGameOver) return; // Jika Game Over, hentikan semua aksi
 
     if (charactersOnBoat.length === 0) {
-        statusText.textContent = "tambahkan karakter ke kapal terlebih dahulu!";
+        statusText.textContent = "Tambahkan karakter ke kapal terlebih dahulu!";
         return;
     }
 
@@ -57,6 +60,9 @@ moveBoatButton.addEventListener('click', () => {
         if (!validateGameRules()) {
             statusText.textContent = "Game Over! terlalu banyak perampok di kapal.";
             endGame(); // Panggil fungsi untuk mengakhiri permainan
+        } else if (checkWinCondition()) {
+            statusText.textContent = "Selamat! Anda telah memenangkan permainan!";
+            endGame(); // Akhiri permainan setelah menang
         } else {
             statusText.textContent = "Perahu telah bergerak. Tambahkan karakter ke perahu!";
         }
@@ -74,6 +80,13 @@ function validateShore(shore) {
     return soldiers === 0 || soldiers >= thieves;
 }
 
+// Periksa kondisi kemenangan
+function checkWinCondition() {
+    const totalCharacters = document.querySelectorAll('.character').length;
+    const charactersOnRight = rightShore.querySelectorAll('.character').length;
+    return charactersOnRight === totalCharacters;
+}
+
 // Fungsi untuk mengakhiri permainan
 function endGame() {
     isGameOver = true; // Aktifkan status Game Over
@@ -81,6 +94,8 @@ function endGame() {
     moveBoatButton.disabled = true;
     // Tambahkan gaya ke tombol untuk menunjukkan bahwa tombol dinonaktifkan
     moveBoatButton.classList.add('disabled');
-    // Tampilkan pesan status
-    statusText.textContent += " Refresh the page to restart the game.";
+    // Tambahkan pesan status jika belum ada
+    if (!statusText.textContent.includes("Refresh the page")) {
+        statusText.textContent += " Refresh the page to restart the game.";
+    }
 }

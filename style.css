@@ -5,12 +5,15 @@ body {
 
 .game-container {
     border: 2px solid #00796b;
-    background-color: #b2dfdb;
+    background-image: url('./image/back.jpg'); /* Tambahkan URL ke gambar danau */
+    background-size: cover; /* Atur agar gambar memenuhi container */
+    background-position: center; /* Posisikan gambar di tengah */
     padding: 20px;
     border-radius: 10px;
     position: relative;
     height: 500px;
 }
+
 
 .shore {
     display: flex;
@@ -20,7 +23,6 @@ body {
 }
 
 .river {
-    background-color: #80cbc4;
     height: 100%;
     border-radius: 10px;
     position: relative;
@@ -32,7 +34,7 @@ body {
     height: 50px;
     background-color: white;
     position: absolute;
-    bottom: 20px;
+    bottom: 100px;
     left: 10%;
     display: flex;
     justify-content: center;
@@ -44,7 +46,7 @@ body {
 
 
 .character {
-    width: 50px;
+    width: 150px;
     height: 100px;
     margin: 10px;
     display: flex;
@@ -66,3 +68,4 @@ body {
 #status {
     color: #00796b;
 }
+
